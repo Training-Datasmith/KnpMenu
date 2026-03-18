@@ -14,7 +14,7 @@ class ArrayAccessProvider implements RendererProviderInterface
      * @param string                                  $defaultRenderer The name of the renderer used by default
      * @param array<string, string>                   $rendererIds     The map between renderer names and registry keys
      */
-    public function __construct(private \ArrayAccess $registry, private string $defaultRenderer, private array $rendererIds)
+    public function __construct(private \ArrayAccess $registry, private readonly string $defaultRenderer, private array $rendererIds)
     {
     }
 

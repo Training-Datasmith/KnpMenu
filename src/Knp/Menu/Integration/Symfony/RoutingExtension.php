@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class RoutingExtension implements ExtensionInterface
 {
-    public function __construct(private UrlGeneratorInterface $generator)
+    public function __construct(private readonly UrlGeneratorInterface $generator)
     {
     }
 

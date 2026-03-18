@@ -18,7 +18,7 @@ class CurrentItemFilterIterator extends \FilterIterator
     /**
      * @param \Iterator<TKey, ItemInterface> $iterator
      */
-    public function __construct(\Iterator $iterator, private MatcherInterface $matcher)
+    public function __construct(\Iterator $iterator, private readonly MatcherInterface $matcher)
     {
 
         parent::__construct($iterator);

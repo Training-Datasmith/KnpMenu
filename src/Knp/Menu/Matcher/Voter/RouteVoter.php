@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class RouteVoter implements VoterInterface
 {
-    public function __construct(private RequestStack $requestStack)
+    public function __construct(private readonly RequestStack $requestStack)
     {
     }
 
@@ -61,7 +61,7 @@ class RouteVoter implements VoterInterface
                 return false;
             }
         } elseif (!empty($testedRoute['pattern'])) {
-            if (!\preg_match($testedRoute['pattern'], $route)) {
+            if (!\preg_match($testedRoute['pattern'], (string) $route)) {
                 return false;
             }
         } else {

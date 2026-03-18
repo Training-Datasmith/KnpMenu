@@ -12,7 +12,7 @@ use Knp\Menu\ItemInterface;
  */
 class RegexVoter implements VoterInterface
 {
-    public function __construct(private ?string $regexp)
+    public function __construct(private readonly ?string $regexp)
     {
     }
 

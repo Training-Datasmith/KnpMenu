@@ -74,7 +74,7 @@ class MenuRuntimeExtension implements RuntimeExtensionInterface
         $currentItem = $this->helper->getCurrentItem($rootItem);
 
         if (null === $currentItem) {
-            $currentItem = $rootItem;
+            return $rootItem;
         }
 
         return $currentItem;

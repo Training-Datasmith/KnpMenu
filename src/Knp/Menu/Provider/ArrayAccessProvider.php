@@ -32,7 +32,7 @@ class ArrayAccessProvider implements MenuProviderInterface
         $menu = $this->registry[$this->menuIds[$name]];
 
         if (\is_callable($menu)) {
-            $menu = $menu($options, $this->registry);
+            return $menu($options, $this->registry);
         }
 
         return $menu;

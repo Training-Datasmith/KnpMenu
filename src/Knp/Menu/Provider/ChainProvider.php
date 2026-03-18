@@ -10,16 +10,10 @@ use Knp\Menu\ItemInterface;
 class ChainProvider implements MenuProviderInterface
 {
     /**
-     * @var iterable<MenuProviderInterface>
-     */
-    private iterable $providers;
-
-    /**
      * @param iterable<MenuProviderInterface> $providers
      */
-    public function __construct(iterable $providers)
+    public function __construct(private readonly iterable $providers)
     {
-        $this->providers = $providers;
     }
 
     public function get(string $name, array $options = []): ItemInterface

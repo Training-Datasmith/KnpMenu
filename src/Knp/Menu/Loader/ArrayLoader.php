@@ -14,7 +14,7 @@ use Knp\Menu\ItemInterface;
  */
 class ArrayLoader implements LoaderInterface
 {
-    public function __construct(private FactoryInterface $factory)
+    public function __construct(private readonly FactoryInterface $factory)
     {
     }
 

@@ -11,7 +11,7 @@ use Knp\Menu\NodeInterface;
  */
 class NodeLoader implements LoaderInterface
 {
-    public function __construct(private FactoryInterface $factory)
+    public function __construct(private readonly FactoryInterface $factory)
     {
     }
 

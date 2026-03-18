@@ -18,16 +18,10 @@ class Matcher implements MatcherInterface
     private \WeakMap $cache;
 
     /**
-     * @var iterable<VoterInterface>
-     */
-    private iterable $voters;
-
-    /**
      * @param iterable<VoterInterface> $voters
      */
-    public function __construct(iterable $voters = [])
+    public function __construct(private readonly iterable $voters = [])
     {
-        $this->voters = $voters;
         $this->cache = new \WeakMap();
     }
 

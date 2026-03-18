@@ -17,7 +17,7 @@ class PsrProvider implements RendererProviderInterface
     /**
      * @param string $defaultRenderer id of the default renderer (it should exist in the container to avoid weird failures)
      */
-    public function __construct(private ContainerInterface $container, private string $defaultRenderer)
+    public function __construct(private readonly ContainerInterface $container, private readonly string $defaultRenderer)
     {
     }
 

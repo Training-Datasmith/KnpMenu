@@ -56,10 +56,8 @@ class CoreExtension implements ExtensionInterface
      */
     private function buildExtras(ItemInterface $item, array $options): void
     {
-        if (!empty($options['extras'])) {
-            foreach ($options['extras'] as $key => $value) {
-                $item->setExtra($key, $value);
-            }
+        foreach ($options['extras'] as $key => $value) {
+            $item->setExtra($key, $value);
         }
     }
 }

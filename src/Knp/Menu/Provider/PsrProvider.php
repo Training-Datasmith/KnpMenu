@@ -15,7 +15,7 @@ use Psr\Container\ContainerInterface;
  */
 class PsrProvider implements MenuProviderInterface
 {
-    public function __construct(private ContainerInterface $container)
+    public function __construct(private readonly ContainerInterface $container)
     {
     }
 

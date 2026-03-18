@@ -11,7 +11,7 @@ use Knp\Menu\ItemInterface;
  */
 class UriVoter implements VoterInterface
 {
-    public function __construct(private ?string $uri = null)
+    public function __construct(private readonly ?string $uri = null)
     {
     }
 

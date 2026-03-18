@@ -15,9 +15,9 @@ class TwigRenderer implements RendererInterface
      * @param array<string, mixed> $defaultOptions
      */
     public function __construct(
-        private Environment $environment,
+        private readonly Environment $environment,
         string $template,
-        private MatcherInterface $matcher,
+        private readonly MatcherInterface $matcher,
         private array $defaultOptions = []
     ) {
         $this->defaultOptions = \array_merge([

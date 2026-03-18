@@ -8,13 +8,6 @@ namespace Knp\Menu;
 class MenuItem implements ItemInterface
 {
     /**
-     * Name of this menu item (used for id by parent menu)
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
      * Label to output, name is used by default
      *
      * @var string|null
@@ -99,20 +92,13 @@ class MenuItem implements ItemInterface
     protected $isCurrent;
 
     /**
-     * @var FactoryInterface
-     */
-    protected $factory;
-
-    /**
      * Class constructor
      *
      * @param string $name The name of this menu, which is how its parent will
      *                     reference it. Also used as label if label not specified
      */
-    public function __construct(string $name, FactoryInterface $factory)
+    public function __construct(protected string $name, protected \Knp\Menu\FactoryInterface $factory)
     {
-        $this->name = $name;
-        $this->factory = $factory;
     }
 
     public function setFactory(FactoryInterface $factory): ItemInterface
@@ -432,7 +418,7 @@ class MenuItem implements ItemInterface
 
         if (isset($this->children[$name])) {
             // unset the child and reset it so it looks independent
-            $this->children[$name]->setParent(null);
+            $this->children[$name]->setParent();
             unset($this->children[$name]);
         }
 
