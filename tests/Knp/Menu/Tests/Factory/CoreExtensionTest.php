@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\Menu\Tests\Factory;
 
 use Knp\Menu\Factory\CoreExtension;

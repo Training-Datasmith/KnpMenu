@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\Menu\Tests\Provider;
 
 use Knp\Menu\ItemInterface;
@@ -10,7 +12,9 @@ final class LazyProviderTest extends TestCase
 {
     public function testHas(): void
     {
-        $provider = new LazyProvider(['first' => static function (): void {}, 'second' => static function (): void {}]);
+        $provider = new LazyProvider(['first' => static function (): void {
+        }, 'second' => static function (): void {
+        }]);
         $this->assertTrue($provider->has('first'));
         $this->assertTrue($provider->has('second'));
         $this->assertFalse($provider->has('third'));

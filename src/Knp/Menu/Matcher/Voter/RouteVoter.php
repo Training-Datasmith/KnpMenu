@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\Menu\Matcher\Voter;
 
 use Knp\Menu\ItemInterface;

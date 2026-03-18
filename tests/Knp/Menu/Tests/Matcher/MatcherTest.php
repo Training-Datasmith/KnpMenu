@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Knp\Menu\Tests\Matcher;
 
 use Knp\Menu\ItemInterface;
