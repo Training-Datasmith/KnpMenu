@@ -197,7 +197,22 @@ class ListRenderer extends Renderer implements RendererInterface
     {
         \assert(null !== $item->getUri());
 
-        return \sprintf('<a href="%s"%s>%s</a>', $this->escape($item->getUri()), $this->renderHtmlAttributes($item->getLinkAttributes()), $this->renderLabel($item, $options));
+        return \sprintf('<a href="%s"%s>%s</a>', $this->escapeUri($item->getUri()), $this->renderHtmlAttributes($item->getLinkAttributes()), $this->renderLabel($item, $options));
+    }
+
+    /**
+     * Escapes a URI for use in an href attribute, blocking javascript: and data: schemes.
+     */
+    protected function escapeUri(string $uri): string
+    {
+        $scheme = \strtolower(\explode(':', $uri, 2)[0] ?? '');
+        $scheme = \preg_replace('/[\x00-\x20]/', '', $scheme) ?? $scheme;
+
+        if (\in_array($scheme, ['javascript', 'data', 'vbscript'], true)) {
+            return '';
+        }
+
+        return $this->escape($uri);
     }
 
     /**
