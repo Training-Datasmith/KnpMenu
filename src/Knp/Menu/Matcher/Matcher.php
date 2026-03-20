@@ -1,24 +1,21 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu\Matcher;
 
-use Knp\Menu\ItemInterface;
-use Knp\Menu\Matcher\Voter\VoterInterface;
-
+use Knp\Menu\Item_Interface;
+use Knp\Menu\Matcher\Voter\Voter_Interface;
 /**
  * A MatcherInterface implementation using a voter system
  *
  * @final since 3.8.0
  */
-class Matcher implements MatcherInterface
+class Matcher implements Matcher_Interface
 {
     /**
      * @var \WeakMap<ItemInterface, bool>
      */
     private \WeakMap $cache;
-
     /**
      * @param iterable<VoterInterface> $voters
      */
@@ -26,47 +23,38 @@ class Matcher implements MatcherInterface
     {
         $this->cache = new \WeakMap();
     }
-
-    public function isCurrent(ItemInterface $item): bool
+    public function is_current(Item_Interface $item): bool
     {
-        $current = $item->isCurrent();
+        $current = $item->is_current();
         if (null !== $current) {
             return $current;
         }
-
         if ($this->cache->offsetExists($item)) {
             return $this->cache[$item];
         }
-
         foreach ($this->voters as $voter) {
-            $current = $voter->matchItem($item);
+            $current = $voter->match_item($item);
             if (null !== $current) {
                 break;
             }
         }
-
         $current = (bool) $current;
         $this->cache[$item] = $current;
-
         return $current;
     }
-
-    public function isAncestor(ItemInterface $item, ?int $depth = null): bool
+    public function is_ancestor(Item_Interface $item, ?int $depth = null): bool
     {
         if (0 === $depth) {
             return false;
         }
-
-        $childDepth = null === $depth ? null : $depth - 1;
-        foreach ($item->getChildren() as $child) {
-            if ($this->isCurrent($child) || $this->isAncestor($child, $childDepth)) {
+        $child_depth = null === $depth ? null : $depth - 1;
+        foreach ($item->get_children() as $child) {
+            if ($this->is_current($child) || $this->is_ancestor($child, $child_depth)) {
                 return true;
             }
         }
-
         return false;
     }
-
     public function clear(): void
     {
         $this->cache = new \WeakMap();

@@ -1,117 +1,96 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu\Matcher\Voter;
 
-use Knp\Menu\ItemInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-
+use Knp\Menu\Item_Interface;
+use Symfony\Component\Http_Foundation\Request;
+use Symfony\Component\Http_Foundation\Request_Stack;
 /**
  * Voter based on the route
  *
  * @final since 3.8.0
  */
-class RouteVoter implements VoterInterface
+class Route_Voter implements Voter_Interface
 {
-    public function __construct(private readonly RequestStack $requestStack)
+    public function __construct(private readonly Request_Stack $request_stack)
     {
     }
-
-    public function matchItem(ItemInterface $item): ?bool
+    public function match_item(Item_Interface $item): ?bool
     {
-        $request = $this->requestStack->getMainRequest();
-
+        $request = $this->request_stack->get_main_request();
         if (null === $request) {
             return null;
         }
-
         $route = $request->attributes->get('_route');
         if (null === $route) {
             return null;
         }
-
-        $routes = (array) $item->getExtra('routes', []);
-
-        foreach ($routes as $testedRoute) {
-            if (\is_string($testedRoute)) {
-                $testedRoute = ['route' => $testedRoute];
+        $routes = (array) $item->get_extra('routes', []);
+        foreach ($routes as $tested_route) {
+            if (\is_string($tested_route)) {
+                $tested_route = ['route' => $tested_route];
             }
-
-            if (!\is_array($testedRoute)) {
+            if (!\is_array($tested_route)) {
                 throw new \InvalidArgumentException('Routes extra items must be strings or arrays.');
             }
-
-            if ($this->isMatchingRoute($request, $testedRoute)) {
+            if ($this->is_matching_route($request, $tested_route)) {
                 return true;
             }
         }
-
         return null;
     }
-
     /**
      * @phpstan-param array{route?: string|null, pattern?: string|null, parameters?: array<string, mixed>, query_parameters?: array<string, string>} $testedRoute
      */
-    private function isMatchingRoute(Request $request, array $testedRoute): bool
+    private function is_matching_route(Request $request, array $tested_route): bool
     {
         $route = $request->attributes->get('_route');
-
-        if (isset($testedRoute['route'])) {
-            if ($route !== $testedRoute['route']) {
+        if (isset($tested_route['route'])) {
+            if ($route !== $tested_route['route']) {
                 return false;
             }
-        } elseif (!empty($testedRoute['pattern'])) {
-            if (!\preg_match($testedRoute['pattern'], (string) $route)) {
+        } elseif (!empty($tested_route['pattern'])) {
+            if (!\preg_match($tested_route['pattern'], (string) $route)) {
                 return false;
             }
         } else {
             throw new \InvalidArgumentException('Routes extra items must have a "route" or "pattern" key.');
         }
-
-        return $this->isMatchingParameters($request, $testedRoute) && $this->isMatchingQueryParameters($request, $testedRoute);
+        return $this->is_matching_parameters($request, $tested_route) && $this->is_matching_query_parameters($request, $tested_route);
     }
-
     /**
      * @phpstan-param array{route?: string|null, pattern?: string|null, parameters?: array<string, mixed>, query_parameters?: array<string, string>} $testedRoute
      */
-    private function isMatchingParameters(Request $request, array $testedRoute): bool
+    private function is_matching_parameters(Request $request, array $tested_route): bool
     {
-        if (!isset($testedRoute['parameters'])) {
+        if (!isset($tested_route['parameters'])) {
             return true;
         }
-
-        $routeParameters = $request->attributes->get('_route_params', []);
-
-        foreach ($testedRoute['parameters'] as $name => $value) {
+        $route_parameters = $request->attributes->get('_route_params', []);
+        foreach ($tested_route['parameters'] as $name => $value) {
             // cast both to string so that we handle integer and other non-string parameters, but don't stumble on 0 == 'abc'.
-            if (!isset($routeParameters[$name]) || (string) $routeParameters[$name] !== (string) $value) {
+            if (!isset($route_parameters[$name]) || (string) $route_parameters[$name] !== (string) $value) {
                 return false;
             }
         }
-
         return true;
     }
-
     /**
      * @phpstan-param array{route?: string|null, pattern?: string|null, parameters?: array<string, mixed>, query_parameters?: array<string, string>} $testedRoute
      */
-    private function isMatchingQueryParameters(Request $request, array $testedRoute): bool
+    private function is_matching_query_parameters(Request $request, array $tested_route): bool
     {
-        if (!isset($testedRoute['query_parameters'])) {
+        if (!isset($tested_route['query_parameters'])) {
             return true;
         }
-
-        $routeQueryParameters = $request->query->all();
-
-        foreach ($testedRoute['query_parameters'] as $name => $value) {
+        $route_query_parameters = $request->query->all();
+        foreach ($tested_route['query_parameters'] as $name => $value) {
             // cast both to string so that we handle integer and other non-string parameters, but don't stumble on 0 == 'abc'.
-            if (!isset($routeQueryParameters[$name]) || \is_array($routeQueryParameters[$name]) || (string) $routeQueryParameters[$name] !== (string) $value) {
+            if (!isset($route_query_parameters[$name]) || \is_array($route_query_parameters[$name]) || (string) $route_query_parameters[$name] !== (string) $value) {
                 return false;
             }
         }
-
         return true;
     }
 }

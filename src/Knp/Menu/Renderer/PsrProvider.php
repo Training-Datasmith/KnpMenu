@@ -1,11 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu\Renderer;
 
-use Psr\Container\ContainerInterface;
-
+use Psr\Container\Container_Interface;
 /**
  * A renderer provider getting the renderer from a PSR-11 container.
  *
@@ -14,28 +12,24 @@ use Psr\Container\ContainerInterface;
  *
  * @final since 3.8.0
  */
-class PsrProvider implements RendererProviderInterface
+class Psr_Provider implements Renderer_Provider_Interface
 {
     /**
      * @param string $defaultRenderer id of the default renderer (it should exist in the container to avoid weird failures)
      */
-    public function __construct(private readonly ContainerInterface $container, private readonly string $defaultRenderer)
+    public function __construct(private readonly Container_Interface $container, private readonly string $default_renderer)
     {
     }
-
-    public function get(?string $name = null): RendererInterface
+    public function get(?string $name = null): Renderer_Interface
     {
         if (null === $name) {
-            $name = $this->defaultRenderer;
+            $name = $this->default_renderer;
         }
-
         if (!$this->container->has($name)) {
             throw new \InvalidArgumentException(\sprintf('The renderer "%s" is not defined.', $name));
         }
-
         return $this->container->get($name);
     }
-
     public function has(string $name): bool
     {
         return $this->container->has($name);

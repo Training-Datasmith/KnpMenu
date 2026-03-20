@@ -1,13 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu;
 
 /**
  * Default implementation of the ItemInterface
  */
-class MenuItem implements ItemInterface
+class Menu_Item implements Item_Interface
 {
     /**
      * Label to output, name is used by default
@@ -15,535 +14,419 @@ class MenuItem implements ItemInterface
      * @var string|null
      */
     protected $label;
-
     /**
      * Attributes for the item link
      *
      * @var array<string, string|bool|null>
      */
-    protected $linkAttributes = [];
-
+    protected $link_attributes = [];
     /**
      * Attributes for the children list
      *
      * @var array<string, string|bool|null>
      */
-    protected $childrenAttributes = [];
-
+    protected $children_attributes = [];
     /**
      * Attributes for the item text
      *
      * @var array<string, string|bool|null>
      */
-    protected $labelAttributes = [];
-
+    protected $label_attributes = [];
     /**
      * Uri to use in the anchor tag
      *
      * @var string|null
      */
     protected $uri;
-
     /**
      * Attributes for the item
      *
      * @var array<string, string|bool|null>
      */
     protected $attributes = [];
-
     /**
      * Extra stuff associated to the item
      *
      * @var array<string, mixed>
      */
     protected $extras = [];
-
     /**
      * Whether the item is displayed
      *
      * @var bool
      */
     protected $display = true;
-
     /**
      * Whether the children of the item are displayed
      *
      * @var bool
      */
-    protected $displayChildren = true;
-
+    protected $display_children = true;
     /**
      * Child items
      *
      * @var array<string, ItemInterface>
      */
     protected $children = [];
-
     /**
      * Parent item
      *
      * @var ItemInterface|null
      */
     protected $parent;
-
     /**
      * whether the item is current. null means unknown
      *
      * @var bool|null
      */
-    protected $isCurrent;
-
+    protected $is_current;
     /**
      * Class constructor
      *
      * @param string $name The name of this menu, which is how its parent will
      *                     reference it. Also used as label if label not specified
      */
-    public function __construct(protected string $name, protected \Knp\Menu\FactoryInterface $factory)
+    public function __construct(protected string $name, protected \Knp\Menu\Factory_Interface $factory)
     {
     }
-
-    public function setFactory(FactoryInterface $factory): ItemInterface
+    public function set_factory(Factory_Interface $factory): Item_Interface
     {
         $this->factory = $factory;
-
         return $this;
     }
-
-    public function getName(): string
+    public function get_name(): string
     {
         return $this->name;
     }
-
-    public function setName(string $name): ItemInterface
+    public function set_name(string $name): Item_Interface
     {
         if ($this->name === $name) {
             return $this;
         }
-
-        $parent = $this->getParent();
+        $parent = $this->get_parent();
         if (null !== $parent && isset($parent[$name])) {
             throw new \InvalidArgumentException('Cannot rename item, name is already used by sibling.');
         }
-
-        $oldName = $this->name;
+        $old_name = $this->name;
         $this->name = $name;
-
         if (null !== $parent) {
-            $names = \array_keys($parent->getChildren());
-            $items = \array_values($parent->getChildren());
-
-            $offset = \array_search($oldName, $names);
+            $names = \array_keys($parent->get_children());
+            $items = \array_values($parent->get_children());
+            $offset = \array_search($old_name, $names);
             $names[$offset] = $name;
-
             $children = \array_combine($names, $items);
-
-            $parent->setChildren($children);
+            $parent->set_children($children);
         }
-
         return $this;
     }
-
-    public function getUri(): ?string
+    public function get_uri(): ?string
     {
         return $this->uri;
     }
-
-    public function setUri(?string $uri): ItemInterface
+    public function set_uri(?string $uri): Item_Interface
     {
         $this->uri = $uri;
-
         return $this;
     }
-
-    public function getLabel(): string
+    public function get_label(): string
     {
         return $this->label ?? $this->name;
     }
-
-    public function setLabel(?string $label): ItemInterface
+    public function set_label(?string $label): Item_Interface
     {
         $this->label = $label;
-
         return $this;
     }
-
-    public function getAttributes(): array
+    public function get_attributes(): array
     {
         return $this->attributes;
     }
-
-    public function setAttributes(array $attributes): ItemInterface
+    public function set_attributes(array $attributes): Item_Interface
     {
         $this->attributes = $attributes;
-
         return $this;
     }
-
-    public function getAttribute(string $name, $default = null)
+    public function get_attribute(string $name, $default = null)
     {
         return $this->attributes[$name] ?? $default;
     }
-
-    public function setAttribute(string $name, $value): ItemInterface
+    public function set_attribute(string $name, $value): Item_Interface
     {
         $this->attributes[$name] = $value;
-
         return $this;
     }
-
-    public function getLinkAttributes(): array
+    public function get_link_attributes(): array
     {
-        return $this->linkAttributes;
+        return $this->link_attributes;
     }
-
-    public function setLinkAttributes(array $linkAttributes): ItemInterface
+    public function set_link_attributes(array $link_attributes): Item_Interface
     {
-        $this->linkAttributes = $linkAttributes;
-
+        $this->link_attributes = $link_attributes;
         return $this;
     }
-
-    public function getLinkAttribute(string $name, $default = null)
+    public function get_link_attribute(string $name, $default = null)
     {
-        return $this->linkAttributes[$name] ?? $default;
+        return $this->link_attributes[$name] ?? $default;
     }
-
-    public function setLinkAttribute(string $name, $value): ItemInterface
+    public function set_link_attribute(string $name, $value): Item_Interface
     {
-        $this->linkAttributes[$name] = $value;
-
+        $this->link_attributes[$name] = $value;
         return $this;
     }
-
-    public function getChildrenAttributes(): array
+    public function get_children_attributes(): array
     {
-        return $this->childrenAttributes;
+        return $this->children_attributes;
     }
-
-    public function setChildrenAttributes(array $childrenAttributes): ItemInterface
+    public function set_children_attributes(array $children_attributes): Item_Interface
     {
-        $this->childrenAttributes = $childrenAttributes;
-
+        $this->children_attributes = $children_attributes;
         return $this;
     }
-
-    public function getChildrenAttribute(string $name, $default = null)
+    public function get_children_attribute(string $name, $default = null)
     {
-        return $this->childrenAttributes[$name] ?? $default;
+        return $this->children_attributes[$name] ?? $default;
     }
-
-    public function setChildrenAttribute(string $name, $value): ItemInterface
+    public function set_children_attribute(string $name, $value): Item_Interface
     {
-        $this->childrenAttributes[$name] = $value;
-
+        $this->children_attributes[$name] = $value;
         return $this;
     }
-
-    public function getLabelAttributes(): array
+    public function get_label_attributes(): array
     {
-        return $this->labelAttributes;
+        return $this->label_attributes;
     }
-
-    public function setLabelAttributes(array $labelAttributes): ItemInterface
+    public function set_label_attributes(array $label_attributes): Item_Interface
     {
-        $this->labelAttributes = $labelAttributes;
-
+        $this->label_attributes = $label_attributes;
         return $this;
     }
-
-    public function getLabelAttribute(string $name, $default = null)
+    public function get_label_attribute(string $name, $default = null)
     {
-        return $this->labelAttributes[$name] ?? $default;
+        return $this->label_attributes[$name] ?? $default;
     }
-
-    public function setLabelAttribute(string $name, $value): ItemInterface
+    public function set_label_attribute(string $name, $value): Item_Interface
     {
-        $this->labelAttributes[$name] = $value;
-
+        $this->label_attributes[$name] = $value;
         return $this;
     }
-
-    public function getExtras(): array
+    public function get_extras(): array
     {
         return $this->extras;
     }
-
-    public function setExtras(array $extras): ItemInterface
+    public function set_extras(array $extras): Item_Interface
     {
         $this->extras = $extras;
-
         return $this;
     }
-
-    public function getExtra(string $name, $default = null)
+    public function get_extra(string $name, $default = null)
     {
         return $this->extras[$name] ?? $default;
     }
-
-    public function setExtra(string $name, $value): ItemInterface
+    public function set_extra(string $name, $value): Item_Interface
     {
         $this->extras[$name] = $value;
-
         return $this;
     }
-
-    public function getDisplayChildren(): bool
+    public function get_display_children(): bool
     {
-        return $this->displayChildren;
+        return $this->display_children;
     }
-
-    public function setDisplayChildren(bool $bool): ItemInterface
+    public function set_display_children(bool $bool): Item_Interface
     {
-        $this->displayChildren = $bool;
-
+        $this->display_children = $bool;
         return $this;
     }
-
-    public function isDisplayed(): bool
+    public function is_displayed(): bool
     {
         return $this->display;
     }
-
-    public function setDisplay(bool $bool): ItemInterface
+    public function set_display(bool $bool): Item_Interface
     {
         $this->display = $bool;
-
         return $this;
     }
-
-    public function addChild($child, array $options = []): ItemInterface
+    public function add_child($child, array $options = []): Item_Interface
     {
-        if (!$child instanceof ItemInterface) {
-            $child = $this->factory->createItem($child, $options);
-        } elseif (null !== $child->getParent()) {
+        if (!$child instanceof Item_Interface) {
+            $child = $this->factory->create_item($child, $options);
+        } elseif (null !== $child->get_parent()) {
             throw new \InvalidArgumentException('Cannot add menu item as child, it already belongs to another menu (e.g. has a parent).');
         }
-
-        $child->setParent($this);
-
-        $this->children[$child->getName()] = $child;
-
+        $child->set_parent($this);
+        $this->children[$child->get_name()] = $child;
         return $child;
     }
-
-    public function getChild(string $name): ?ItemInterface
+    public function get_child(string $name): ?Item_Interface
     {
         return $this->children[$name] ?? null;
     }
-
-    public function reorderChildren(array $order): ItemInterface
+    public function reorder_children(array $order): Item_Interface
     {
         if (\count($order) !== $this->count()) {
             throw new \InvalidArgumentException('Cannot reorder children, order does not contain all children.');
         }
-
-        $newChildren = [];
-
+        $new_children = [];
         foreach ($order as $name) {
             if (!isset($this->children[$name])) {
-                throw new \InvalidArgumentException('Cannot find children named '.$name);
+                throw new \InvalidArgumentException('Cannot find children named ' . $name);
             }
-
             $child = $this->children[$name];
-            $newChildren[$name] = $child;
+            $new_children[$name] = $child;
         }
-
-        $this->setChildren($newChildren);
-
+        $this->set_children($new_children);
         return $this;
     }
-
-    public function copy(): ItemInterface
+    public function copy(): Item_Interface
     {
-        $newMenu = clone $this;
-        $newMenu->setChildren([]);
-        $newMenu->setParent();
-        foreach ($this->getChildren() as $child) {
-            $newMenu->addChild($child->copy());
+        $new_menu = clone $this;
+        $new_menu->set_children([]);
+        $new_menu->set_parent();
+        foreach ($this->get_children() as $child) {
+            $new_menu->add_child($child->copy());
         }
-
-        return $newMenu;
+        return $new_menu;
     }
-
-    public function getLevel(): int
+    public function get_level(): int
     {
-        return $this->parent ? $this->parent->getLevel() + 1 : 0;
+        return $this->parent ? $this->parent->get_level() + 1 : 0;
     }
-
-    public function getRoot(): ItemInterface
+    public function get_root(): Item_Interface
     {
         $obj = $this;
         do {
             $found = $obj;
-        } while ($obj = $obj->getParent());
-
+        } while ($obj = $obj->get_parent());
         return $found;
     }
-
-    public function isRoot(): bool
+    public function is_root(): bool
     {
         return null === $this->parent;
     }
-
-    public function getParent(): ?ItemInterface
+    public function get_parent(): ?Item_Interface
     {
         return $this->parent;
     }
-
-    public function setParent(?ItemInterface $parent = null): ItemInterface
+    public function set_parent(?Item_Interface $parent = null): Item_Interface
     {
         if ($parent === $this) {
             throw new \InvalidArgumentException('Item cannot be a child of itself');
         }
-
         $this->parent = $parent;
-
         return $this;
     }
-
-    public function getChildren(): array
+    public function get_children(): array
     {
         return $this->children;
     }
-
-    public function setChildren(array $children): ItemInterface
+    public function set_children(array $children): Item_Interface
     {
         $this->children = $children;
-
         return $this;
     }
-
-    public function removeChild($name): ItemInterface
+    public function remove_child($name): Item_Interface
     {
-        $name = $name instanceof ItemInterface ? $name->getName() : $name;
-
+        $name = $name instanceof Item_Interface ? $name->get_name() : $name;
         if (isset($this->children[$name])) {
             // unset the child and reset it so it looks independent
-            $this->children[$name]->setParent();
+            $this->children[$name]->set_parent();
             unset($this->children[$name]);
         }
-
         return $this;
     }
-
-    public function getFirstChild(): ItemInterface
+    public function get_first_child(): Item_Interface
     {
         if (empty($this->children)) {
             throw new \LogicException('Cannot get first child: there are no children.');
         }
-
         return \reset($this->children);
     }
-
-    public function getLastChild(): ItemInterface
+    public function get_last_child(): Item_Interface
     {
         if (empty($this->children)) {
             throw new \LogicException('Cannot get last child: there are no children.');
         }
-
         return \end($this->children);
     }
-
-    public function hasChildren(): bool
+    public function has_children(): bool
     {
         foreach ($this->children as $child) {
-            if ($child->isDisplayed()) {
+            if ($child->is_displayed()) {
                 return true;
             }
         }
-
         return false;
     }
-
-    public function setCurrent(?bool $bool): ItemInterface
+    public function set_current(?bool $bool): Item_Interface
     {
-        $this->isCurrent = $bool;
-
+        $this->is_current = $bool;
         return $this;
     }
-
-    public function isCurrent(): ?bool
+    public function is_current(): ?bool
     {
-        return $this->isCurrent;
+        return $this->is_current;
     }
-
-    public function isLast(): bool
+    public function is_last(): bool
     {
         // if this is root, then return false
         if (null === $this->parent) {
             return false;
         }
-
-        return $this->parent->getLastChild() === $this;
+        return $this->parent->get_last_child() === $this;
     }
-
-    public function isFirst(): bool
+    public function is_first(): bool
     {
         // if this is root, then return false
         if (null === $this->parent) {
             return false;
         }
-
-        return $this->parent->getFirstChild() === $this;
+        return $this->parent->get_first_child() === $this;
     }
-
-    public function actsLikeFirst(): bool
+    public function acts_like_first(): bool
     {
         // root items are never "marked" as first
         if (null === $this->parent) {
             return false;
         }
-
         // A menu acts like first only if it is displayed
-        if (!$this->isDisplayed()) {
+        if (!$this->is_displayed()) {
             return false;
         }
-
         // if we're first and visible, we're first, period.
-        if ($this->isFirst()) {
+        if ($this->is_first()) {
             return true;
         }
-
-        $children = $this->parent->getChildren();
+        $children = $this->parent->get_children();
         foreach ($children as $child) {
             // loop until we find a visible menu. If its this menu, we're first
-            if ($child->isDisplayed()) {
-                return $child->getName() === $this->getName();
+            if ($child->is_displayed()) {
+                return $child->get_name() === $this->get_name();
             }
         }
-
         return false;
     }
-
-    public function actsLikeLast(): bool
+    public function acts_like_last(): bool
     {
         // root items are never "marked" as last
         if (null === $this->parent) {
             return false;
         }
-
         // A menu acts like last only if it is displayed
-        if (!$this->isDisplayed()) {
+        if (!$this->is_displayed()) {
             return false;
         }
-
         // if we're last and visible, we're last, period.
-        if ($this->isLast()) {
+        if ($this->is_last()) {
             return true;
         }
-
-        $children = \array_reverse($this->parent->getChildren());
+        $children = \array_reverse($this->parent->get_children());
         foreach ($children as $child) {
             // loop until we find a visible menu. If its this menu, we're first
-            if ($child->isDisplayed()) {
-                return $child->getName() === $this->getName();
+            if ($child->is_displayed()) {
+                return $child->get_name() === $this->get_name();
             }
         }
-
         return false;
     }
-
     /**
      * Implements Countable
      */
@@ -551,7 +434,6 @@ class MenuItem implements ItemInterface
     {
         return \count($this->children);
     }
-
     /**
      * Implements IteratorAggregate
      */
@@ -559,7 +441,6 @@ class MenuItem implements ItemInterface
     {
         return new \ArrayIterator($this->children);
     }
-
     /**
      * Implements ArrayAccess
      *
@@ -569,7 +450,6 @@ class MenuItem implements ItemInterface
     {
         return isset($this->children[$offset]);
     }
-
     /**
      * Implements ArrayAccess
      *
@@ -577,12 +457,11 @@ class MenuItem implements ItemInterface
      *
      * @return ItemInterface|null
      */
-    #[\ReturnTypeWillChange]
+    #[\Return_Type_Will_Change]
     public function offsetGet($offset)
     {
-        return $this->getChild($offset);
+        return $this->get_child($offset);
     }
-
     /**
      * Implements ArrayAccess
      *
@@ -591,9 +470,8 @@ class MenuItem implements ItemInterface
      */
     public function offsetSet($offset, $value): void
     {
-        $this->addChild($offset)->setLabel($value);
+        $this->add_child($offset)->set_label($value);
     }
-
     /**
      * Implements ArrayAccess
      *
@@ -601,6 +479,6 @@ class MenuItem implements ItemInterface
      */
     public function offsetUnset($offset): void
     {
-        $this->removeChild($offset);
+        $this->remove_child($offset);
     }
 }

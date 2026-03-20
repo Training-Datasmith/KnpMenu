@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu\Renderer;
 
-interface RendererProviderInterface
+interface Renderer_Provider_Interface
 {
     /**
      * Retrieves a renderer by its name
@@ -13,8 +12,7 @@ interface RendererProviderInterface
      *
      * @throws \InvalidArgumentException if the renderer does not exist
      */
-    public function get(?string $name = null): RendererInterface;
-
+    public function get(?string $name = null): Renderer_Interface;
     /**
      * Checks whether a renderer exists
      */

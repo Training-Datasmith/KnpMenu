@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu\Iterator;
 
-use Knp\Menu\ItemInterface;
-use Knp\Menu\Matcher\MatcherInterface;
-
+use Knp\Menu\Item_Interface;
+use Knp\Menu\Matcher\Matcher_Interface;
 /**
  * Filter iterator keeping only current items
  *
@@ -15,23 +13,21 @@ use Knp\Menu\Matcher\MatcherInterface;
  *
  * @final since 3.8.0
  */
-class CurrentItemFilterIterator extends \FilterIterator
+class Current_Item_Filter_Iterator extends \Filter_Iterator
 {
     /**
      * @param \Iterator<TKey, ItemInterface> $iterator
      */
-    public function __construct(\Iterator $iterator, private readonly MatcherInterface $matcher)
+    public function __construct(\Iterator $iterator, private readonly Matcher_Interface $matcher)
     {
-
         parent::__construct($iterator);
     }
-
     /**
      * @return bool
      */
-    #[\ReturnTypeWillChange]
+    #[\Return_Type_Will_Change]
     public function accept()
     {
-        return $this->matcher->isCurrent($this->current());
+        return $this->matcher->is_current($this->current());
     }
 }

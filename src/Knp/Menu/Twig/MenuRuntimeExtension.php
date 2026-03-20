@@ -1,26 +1,20 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu\Twig;
 
-use Knp\Menu\ItemInterface;
-use Knp\Menu\Matcher\MatcherInterface;
-use Knp\Menu\Util\MenuManipulator;
-use Twig\Extension\RuntimeExtensionInterface;
-
+use Knp\Menu\Item_Interface;
+use Knp\Menu\Matcher\Matcher_Interface;
+use Knp\Menu\Util\Menu_Manipulator;
+use Twig\Extension\Runtime_Extension_Interface;
 /**
  * @final since 3.8.0
  */
-class MenuRuntimeExtension implements RuntimeExtensionInterface
+class Menu_Runtime_Extension implements Runtime_Extension_Interface
 {
-    public function __construct(
-        private readonly Helper $helper,
-        private readonly ?MatcherInterface $matcher = null,
-        private readonly ?MenuManipulator $menuManipulator = null,
-    ) {
+    public function __construct(private readonly Helper $helper, private readonly ?Matcher_Interface $matcher = null, private readonly ?Menu_Manipulator $menu_manipulator = null)
+    {
     }
-
     /**
      * Retrieves an item following a path in the tree.
      *
@@ -29,11 +23,10 @@ class MenuRuntimeExtension implements RuntimeExtensionInterface
      *
      * @internal since 3.8.0
      */
-    public function get(ItemInterface|string $menu, array $path = [], array $options = []): ItemInterface
+    public function get(Item_Interface|string $menu, array $path = [], array $options = []): Item_Interface
     {
         return $this->helper->get($menu, $path, $options);
     }
-
     /**
      * Renders a menu with the specified renderer.
      *
@@ -42,11 +35,10 @@ class MenuRuntimeExtension implements RuntimeExtensionInterface
      *
      * @internal since 3.8.0
      */
-    public function render(array|ItemInterface|string $menu, array $options = [], ?string $renderer = null): string
+    public function render(array|Item_Interface|string $menu, array $options = [], ?string $renderer = null): string
     {
         return $this->helper->render($menu, $options, $renderer);
     }
-
     /**
      * Returns an array ready to be used for breadcrumbs.
      *
@@ -59,29 +51,24 @@ class MenuRuntimeExtension implements RuntimeExtensionInterface
      *
      * @internal since 3.8.0
      */
-    public function getBreadcrumbsArray(array|ItemInterface|string $menu, array|string|null $subItem = null): array
+    public function get_breadcrumbs_array(array|Item_Interface|string $menu, array|string|null $sub_item = null): array
     {
-        return $this->helper->getBreadcrumbsArray($menu, $subItem);
+        return $this->helper->get_breadcrumbs_array($menu, $sub_item);
     }
-
     /**
      * Returns the current item of a menu.
      *
      * @internal since 3.8.0
      */
-    public function getCurrentItem(ItemInterface|string $menu): ItemInterface
+    public function get_current_item(Item_Interface|string $menu): Item_Interface
     {
-        $rootItem = $this->get($menu);
-
-        $currentItem = $this->helper->getCurrentItem($rootItem);
-
-        if (null === $currentItem) {
-            return $rootItem;
+        $root_item = $this->get($menu);
+        $current_item = $this->helper->get_current_item($root_item);
+        if (null === $current_item) {
+            return $root_item;
         }
-
-        return $currentItem;
+        return $current_item;
     }
-
     /**
      * A string representation of this menu item
      *
@@ -89,29 +76,25 @@ class MenuRuntimeExtension implements RuntimeExtensionInterface
      *
      * @internal since 3.8.0
      */
-    public function pathAsString(ItemInterface $menu, string $separator = ' > '): string
+    public function path_as_string(Item_Interface $menu, string $separator = ' > '): string
     {
-        if (null === $this->menuManipulator) {
+        if (null === $this->menu_manipulator) {
             throw new \BadMethodCallException('The menu manipulator must be set to get the breadcrumbs array');
         }
-
-        return $this->menuManipulator->getPathAsString($menu, $separator);
+        return $this->menu_manipulator->get_path_as_string($menu, $separator);
     }
-
     /**
      * Checks whether an item is current.
      *
      * @internal since 3.8.0
      */
-    public function isCurrent(ItemInterface $item): bool
+    public function is_current(Item_Interface $item): bool
     {
         if (null === $this->matcher) {
             throw new \BadMethodCallException('The matcher must be set to get the breadcrumbs array');
         }
-
-        return $this->matcher->isCurrent($item);
+        return $this->matcher->is_current($item);
     }
-
     /**
      * Checks whether an item is the ancestor of a current item.
      *
@@ -119,12 +102,11 @@ class MenuRuntimeExtension implements RuntimeExtensionInterface
      *
      * @internal since 3.8.0
      */
-    public function isAncestor(ItemInterface $item, ?int $depth = null): bool
+    public function is_ancestor(Item_Interface $item, ?int $depth = null): bool
     {
         if (null === $this->matcher) {
             throw new \BadMethodCallException('The matcher must be set to get the breadcrumbs array');
         }
-
-        return $this->matcher->isAncestor($item, $depth);
+        return $this->matcher->is_ancestor($item, $depth);
     }
 }

@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu\Renderer;
 
-use Knp\Menu\ItemInterface;
-
-interface RendererInterface
+use Knp\Menu\Item_Interface;
+interface Renderer_Interface
 {
     /**
      * Renders menu tree.
@@ -25,5 +23,5 @@ interface RendererInterface
      * @param ItemInterface        $item    Menu item
      * @param array<string, mixed> $options some rendering options
      */
-    public function render(ItemInterface $item, array $options = []): string;
+    public function render(Item_Interface $item, array $options = []): string;
 }

@@ -1,28 +1,24 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu\Matcher;
 
-use Knp\Menu\ItemInterface;
-
+use Knp\Menu\Item_Interface;
 /**
  * Interface implemented by the item matcher
  */
-interface MatcherInterface
+interface Matcher_Interface
 {
     /**
      * Checks whether an item is current.
      */
-    public function isCurrent(ItemInterface $item): bool;
-
+    public function is_current(Item_Interface $item): bool;
     /**
      * Checks whether an item is the ancestor of a current item.
      *
      * @param int|null $depth The max depth to look for the item
      */
-    public function isAncestor(ItemInterface $item, ?int $depth = null): bool;
-
+    public function is_ancestor(Item_Interface $item, ?int $depth = null): bool;
     /**
      * Clears the state of the matcher.
      */

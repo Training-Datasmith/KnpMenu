@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu\Attribute;
 
 /**
@@ -13,10 +12,9 @@ namespace Knp\Menu\Attribute;
  * the menu provider is expected to be handled by framework integrations.
  */
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-final class AsMenuBuilder
+final class As_Menu_Builder
 {
-    public function __construct(
-        public readonly string $name,
-    ) {
+    public function __construct(public readonly string $name)
+    {
     }
 }

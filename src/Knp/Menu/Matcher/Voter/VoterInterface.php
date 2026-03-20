@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Knp\Menu\Matcher\Voter;
 
-use Knp\Menu\ItemInterface;
-
+use Knp\Menu\Item_Interface;
 /**
  * Interface implemented by the matching voters
  */
-interface VoterInterface
+interface Voter_Interface
 {
     /**
      * Checks whether an item is current.
@@ -17,5 +15,5 @@ interface VoterInterface
      * If the voter is not able to determine a result,
      * it should return null to let other voters do the job.
      */
-    public function matchItem(ItemInterface $item): ?bool;
+    public function match_item(Item_Interface $item): ?bool;
 }
